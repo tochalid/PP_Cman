@@ -23,39 +23,36 @@ Passing the project requires a successful simulator track run and documentation,
 
 Beside existing program code following steps have been implemented:
 
-1. Set initial state of the simulator  
-2. Set the initial state of the controller and read the sensor data
-3. Detect objects (=vehicless) in same lane and predict their position/behavior
-4. Evaluate potential maneuvers and simulate with safety thresholds
-5. Actuate safe maneuver
-6. Initialize path tangent using previous path waypoints
-7. Construct path interpolating predicted waypoints with spline (incl. lane changes) 
-8. Space & transform path points and send to simulator
+1. Set the initial state and read the sensor data
+2. Detect objects (eg. vehicles) in same lane and predict their position/behavior
+3. Evaluate potential maneuvers and simulate with safety thresholds
+4. Actuate safe maneuver
+5. Initialize path tangent using previous path waypoints
+6. Construct path interpolating predicted waypoints with spline (incl. lane changes) 
+7. Space & transform path points and send to simulator
+8. Tune threshold and distance parameter of the controller to drive safely
 
 ### Implementation Details
 
 #### Initial State
-The assumption is that our car will always start in the center lane. It will also start from standstill and gradually accelerate to avoid exceeding the maximum acceleration limit.
+The system assumes the car starts in the center lane, standstill. It gradually accelerates.
 
-#### Creating the Path
-To create the path to follow the approach using splines described in the walkthrough is used. It essentially uses `MAX_POINTS` (50 in our case) waypoints starting at the end of the previous path (or, at the start of the simulation, with the car's current position). Then a number of additional (`PATH_NUMPOINTS`, or 3 in our case) waypoints spaced evenly apart (`POINT_SPACING` or 30m in our case) are added. A spline is then fitted to determine intermediate points and produce a smooth vector of waypoints for the car to follow.
+#### Planning the Path
+Logic follows as outlined in the project walkthrough [video](https://youtu.be/7sI3VHFPP0w?t=1520). We essentially use 50 waypoints tangent with the end of the previous path (or, at start the car's current position). Then 3 predicted waypoints every 30m are added. Fitting a spline function helps to calculate intermediate points of a path vector to travel smooth and in desired target speed.
 
 #### Avoiding Collisions
-The approach to avoiding collisions with cars driving in the same lane is to:
+The system avoids collisions with objects in the same lane that are detected by the sensors. The feature consists of:
 
-1. Look for cars travelling in the same lane that are deemed too close to our car (set using parameter `LANE_CHANGE_THRESHOLD`)
-2. If our car gets too close to another car it tries changing lanes to the left. First it checks if there is a car in the lane to our left, allowing for additional room in front (using `LANE_CHANGE_DIST_FRONT`) and behind (using `LANE_CHANGE_DIST_REAR`) of our car to prevent changing lanes and ending up too close to the other car
-3. If a lane change to the left is not possible because a car in that lane would end up too close to our car, or if our car is already in the leftmost lane, a lane change to the right is attempted using the same approach
-4. If a lane change to the right is also not possible, the only other option is to slow down and stay in the current lane.
+1. Looping throug each sensor record filtering for objects a) in the same lane and b) too close using a threshold parameter `THRES_FRONT`. 
+2. A maneuver `go_left` is simulated. The system predicts the violation of distance margin `DIST_FRONT` and `DIST_REAR` to other objects froming a potential lane gap in the target lane, also checking for staying in the left most lane. 
+3. If safe, the maneuver `go_left` is actuated, otherwise `go_right` is simulated respectively. If both simulations fail the safety procedure, the controller reduces the velocity adapting to the object speed and until actual distance > `THRES_FRONT` or lane change `is_safe` again. 
+4. If the lane is free, the car accelerates to a speed limit set to 48 MPH.
 
-If there are no cars in front of our car, our car will always keep accelerating until it reaches the speed limit.
+These constants determine the safety procedure for lane change maneuvers. They represent a balance build while testing more than 200 miles in the simulator, therein 45.53 miles without incident. Main factors in order of importance are: avoid collisions, avoid incidents, drive fast, drive smooth. 
 
-Three constants are used to determine when a lane change is required, and how much room there needs to be between our car and cars already in the other lane. Theses variables are `LANE_CHANGE_THRESHOLD`, `LANE_CHANGE_DIST_FRONT` and `LANE_CHANGE_DIST_REAR`. Their values were found using trial and error, observing lane change behaviour in the simulator and finding a balance between aggressively changing lanes and maintaining the maximum speed, while avoiding changing lanes into or cutting off other cars.
-
-#### Possible Improvements
-1. The car currently favours lane changes to the left because that is the first lane change it will consider when getting too close to another car in the same lane. Only if a lane change to the left is not possible a lane change to the right is considered
-2. A lane change only checks for cars immediately to our left or right, with a little bit of space added for safety. It does not consider other traffic in that lane. E.g. it may decide to change lanes to a lane with lots of traffic, or slower traffic, instead of a lane with no other traffic
-3. Our car does not check for any cars changing lanes into our lane. Occassionally another car will cause a collision because it is changing lanes into our lane.
+#### Potential Improvements (see TODO: flag in code)
+1. Controller: Left turns a favored, but optimizing a cost function for entire sensor data could set the best choice. Brake and throttle behavior while adapting to object speed should be smoothed.   
+2. PREDICTION: When a lane change maneuver is executed while another object changes into the same target lane safety is at risk. Almost all collisions observed are caused by (sudden) lateral movements into the target lane. The prediction mechanism should be considering eg. lateral distance margin.
 
 ## Compilation and Simulation
 
@@ -80,3 +77,15 @@ Three constants are used to determine when a lane change is required, and how mu
 * Simulator: The project involves Term 3 Simulator which can be downloaded here: https://github.com/udacity/self-driving-car-sim/releases. A server package uWebSocketIO is setting up a connection from the C++ program to the simulator, which acts as the host.
 * OS Setup: Ubuntu 16.4, for details pls see [here](https://classroom.udacity.com/nanodegrees/nd013/parts/40f38239-66b6-46ec-ae68-03afd8a601c8/modules/0949fca6-b379-42af-a919-ee50aa304e6a/lessons/f758c44c-5e40-4e01-93b5-1a82aa4e044f/concepts/23d376c7-0195-4276-bdf0-e02f1f3c665d)
 * Eigen package: Eigen is already part of the repo, pls see: http://eigen.tuxfamily.org/index.php?title=Main_Page
+
+## Screenshot Archive
+![img1](./pic/Screenshot from 2018-04-21 19-39-51.png)
+![img2](./pic/Screenshot from 2018-04-22 03-16-52.png)
+![img3](./pic/Screenshot from 2018-04-22 14-26-05.png)
+![img4](./pic/Screenshot from 2018-04-22 21-13-10.png) 
+![img5](./pic/Screenshot from 2018-04-22 22-48-56.png) 
+![img6](./pic/Screenshot from 2018-04-22 23-16-25.png) 
+![img7](./pic/Screenshot from 2018-04-22 23-30-09.png) 
+![img8](./pic/Screenshot from 2018-04-22 23-30-54.png) 
+![img9](./pic/Screenshot from 2018-04-22 23-53-54.png) 
+![img0](./pic/Screenshot from 2018-04-23 01-18-20.png)
