@@ -80,24 +80,24 @@ These constants determine the safety procedure for lane change maneuvers. They r
 * Eigen package: Eigen is already part of the repo, pls see: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
 ## Screenshot Archive
-![img11](./pic/Screenshot from 2018-04-23 01-18-20.png)
+![img11](./pic/Screenshot-from-2018-04-23-01-18-20.png)
 
-![img10](./pic/Screenshot from 2018-04-23 01-18-20.png)
+![img10](./pic/Screenshot-from-2018-04-23-01-18-20.png)
 
-![img9](./pic/Screenshot from 2018-04-22 23-53-54.png) 
+![img9](./pic/Screenshot-from-2018-04-22-23-53-54.png) 
 
-![img8](./pic/Screenshot from 2018-04-22 23-30-54.png) 
+![img8](./pic/Screenshot-from-2018-04-22-23-30-54.png) 
 
-![img7](./pic/Screenshot from 2018-04-22 23-30-09.png) 
+![img7](./pic/Screenshot-from-2018-04-22-23-30-09.png) 
 
-![img6](./pic/Screenshot from 2018-04-22 23-16-25.png) 
+![img6](./pic/Screenshot-from-2018-04-22-23-16-25.png) 
 
-![img5](./pic/Screenshot from 2018-04-22 22-48-56.png) 
+![img5](./pic/Screenshot-from-2018-04-22-22-48-56.png) 
 
-![img4](./pic/Screenshot from 2018-04-22 21-13-10.png) 
+![img4](./pic/Screenshot-from-2018-04-22-21-13-10.png) 
 
-![img3](./pic/Screenshot from 2018-04-22 14-26-05.png)
+![img3](./pic/Screenshot-from-2018-04-22-14-26-05.png)
 
-![img2](./pic/Screenshot from 2018-04-22 03-16-52.png)
+![img2](./pic/Screenshot-from-2018-04-22-03-16-52.png)
 
-![img1](./pic/Screenshot from 2018-04-21 19-39-51.png)
+![img1](./pic/Screenshot-from-2018-04-21-19-39-51.png)
