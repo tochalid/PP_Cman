@@ -80,7 +80,7 @@ These constants determine the safety procedure for lane change maneuvers. They r
 * Eigen package: Eigen is already part of the repo, pls see: http://eigen.tuxfamily.org/index.php?title=Main_Page
 
 ## Screenshot Archive
-![img11](./pic/Screenshot-from-2018-04-23-01-18-20.png)
+![img11](./pic/Screenshot-from-2018-04-23-01-32-48.png)
 
 ![img10](./pic/Screenshot-from-2018-04-23-01-18-20.png)
 
